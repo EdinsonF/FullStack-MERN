@@ -1,8 +1,40 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import clienteAxios from '../config/axios';
+
 
 
 function CrearCita(props) {
+
+    const [cita, guardarCita] =  useState({
+        nombre: "",
+        propietario: "",
+        fecha: "",
+        hora: "",
+        telefono: "",
+        sintomas: ""
+    })
+
+    const actualizarState = e => {
+        guardarCita({
+            ...cita, [e.target.name] : e.target.value
+        })
+    }
+
+    const enviarCita = (e) =>{
+        e.preventDefault();
+
+        clienteAxios.post('/pacientes', cita)
+          .then(respuesta => {
+            console.log(respuesta);
+
+            props.history.push('/');            
+          })
+          .catch(error => {
+            console.log(error)
+          })
+    }
+
     return (
         <Fragment>
             <h1 className="my-5"> Crear Nueva Cita</h1>
@@ -12,7 +44,7 @@ function CrearCita(props) {
                         <Link to={'/'} className="btn btn-success text-uppercase py-2 px-5 font-weight-bold"> Volver</Link>
                     </div>
                     <div className="col-md-8 mx-auto">
-                        <form className="bg-white p-5 bordered">
+                        <form onSubmit={enviarCita} className="bg-white p-5 bordered">
                             <div className="form-group">
                                 <label htmlFor="nombre">Nombre Mascota</label>
                                 <input 
@@ -21,6 +53,7 @@ function CrearCita(props) {
                                     id="nombre" 
                                     name="nombre" 
                                     placeholder="Nombre Mascota" 
+                                    onChange={actualizarState}
                                 />
                             </div>
 
@@ -32,6 +65,7 @@ function CrearCita(props) {
                                     id="propietario" 
                                     name="propietario" 
                                     placeholder="Nombre Propietario" 
+                                    onChange={actualizarState}
                                 />
                             </div>
 
@@ -43,6 +77,7 @@ function CrearCita(props) {
                                     id="telefono" 
                                     name="telefono" 
                                     placeholder="Teléfono" 
+                                    onChange={actualizarState}
                                 />
                             </div>
 
@@ -52,7 +87,8 @@ function CrearCita(props) {
                                     type="date" 
                                     className="form-control form-control-lg" 
                                     id="fecha" 
-                                    name="fecha"  
+                                    name="fecha" 
+                                    onChange={actualizarState}
                                 />
                             </div>
 
@@ -63,6 +99,7 @@ function CrearCita(props) {
                                     className="form-control form-control-lg" 
                                     id="hora" 
                                     name="hora"  
+                                    onChange={actualizarState}
                                 />
                             </div>
 
@@ -71,7 +108,8 @@ function CrearCita(props) {
                                 <textarea 
                                     className="form-control" 
                                     name="sintomas" 
-                                    rows="6"
+                                    rows="6" 
+                                    onChange={actualizarState}
                                 ></textarea>
                             </div>
 
