@@ -1,9 +1,23 @@
 import React, { Fragment } from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
+import clienteAxios from '../config/axios'
 
-const Paciente = ({citas}) => {
+const Paciente = ( props) => {
+    const {citas} = props;
+    
+    const eliminarCita = (id) =>{
+        console.log(id);
 
-    if(citas.length === 0) return null;
+        clienteAxios.delete(`/pacientes/${id}`)
+        .then(respuesta => {
+                props.guardarConsultar(true);
+                props.history.push('/'); 
+        })
+        .catch(error => console.log(error))
+    }
+
+    if(citas.size === 0) return null;
+    
 
     return (
         <Fragment>
@@ -16,25 +30,41 @@ const Paciente = ({citas}) => {
                     <div className="col-md-8 mx-auto">
                         <div className="list-group">
                             {citas.map(cita => (
-                                <a key={cita._id} className="p-5 list-group-item list-group-item-action flex-column align-item-start">
+                                <div key={cita._id}>
+                                <Link to={'/cita/'+cita._id}  className="p-5 list-group-item list-group-item-action flex-column align-item-start">
+                                    <div className="d-flex w-100 justify-content-between mb-4">
+                                        <h3 className="mb-3"> {cita.nombre}</h3>
+                                        
+                                        <small className="fecha-alta">
+                                            {cita.fecha} - {cita.hora} 
+                                        </small>
+                                    </div>
+
+                                    <p className="mb-0">
+                                        {cita.sintomas}
+                                    </p>
+
+                                    <div className="contacto py-3">
+                                        <p>Dueño: {cita.propietario}</p>
+                                        <p>Telefono: {cita.telefono}</p>
+                                        
+
+                                    </div>
+                                    
+                                
+                                </Link>
                                 <div className="d-flex w-100 justify-content-between mb-4">
-                                    <h3 className="mb-3"> {cita.nombre}</h3>
-                                    <small className="fecha-alta">
-                                        {cita.fecha} - {cita.hora}
-                                    </small>
-                                </div>
-
-                                <p className="mb-0">
-                                    {cita.sintomas}
-                                </p>
-
-                                <div className="contacto py-3">
-                                    <p>Dueño: {cita.propietario}</p>
-                                    <p>Telefono: {cita.telefono}</p>
-
-                                </div>
-                                </a>
+                                        <h3 className="mb-2"> </h3>
+                                        
+                                        <small className="eliminar">
+                                        <button type="button" className="btn btn-danger col py-2 px-5 font-weight-bold"
+                                         onClick={() => eliminarCita(cita._id)}>Eliminar</button>  
+                                        </small>
+                                    </div>
+                               </div>
+                                
                             ))}
+                            
                         </div>
                     </div>
                 </div>
@@ -44,4 +74,4 @@ const Paciente = ({citas}) => {
     );
 };
 
-export default Paciente;
+export default withRouter(Paciente);

@@ -1,10 +1,13 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import clienteAxios from '../config/axios';
 
 
 
 function CrearCita(props) {
+  
+    let titulo;
+    const citaUpdate = props.citaUpdate;
 
     const [cita, guardarCita] =  useState({
         nombre: "",
@@ -16,6 +19,7 @@ function CrearCita(props) {
     })
 
     const actualizarState = e => {
+        
         guardarCita({
             ...cita, [e.target.name] : e.target.value
         })
@@ -24,20 +28,67 @@ function CrearCita(props) {
     const enviarCita = (e) =>{
         e.preventDefault();
 
-        clienteAxios.post('/pacientes', cita)
-          .then(respuesta => {
-            console.log(respuesta);
+        if(titulo === 'Editar Cita'){
+            console.log("Editando");
+            clienteAxios.put(`/pacientes/${cita._id}`, cita)
+            .then(respuesta => {
+                console.log(respuesta);
+                props.guardarConsultar(true);
+                props.history.push('/');            
+            })
+            .catch(error => {
+                console.log(error)
+            })
 
-            props.history.push('/');            
-          })
-          .catch(error => {
-            console.log(error)
-          })
+        }else{
+            console.log("creando");
+            clienteAxios.post('/pacientes', cita)
+            .then(respuesta => {
+                //console.log(respuesta);
+                props.guardarConsultar(true);
+                props.history.push('/');            
+            })
+            .catch(error => {
+                console.log(error)
+            })
+
+        }
+        
     }
+
+   
+
+   
+if(citaUpdate){
+    titulo = "Editar Cita"
+}else{
+    titulo = "Crear Cita"
+}
+    useEffect(() => {
+        if(citaUpdate){
+            
+        //console.log("editando");
+        guardarCita({
+            _id: citaUpdate._id,
+            nombre: citaUpdate.nombre,
+            propietario: citaUpdate.propietario,
+            telefono: citaUpdate.telefono,
+            fecha: citaUpdate.fecha,
+            hora: citaUpdate.hora,
+            sintomas: citaUpdate.sintomas
+
+        })
+        }else{
+            //console.log("creando");
+
+        }
+      }, [ titulo]);
+
+   
 
     return (
         <Fragment>
-            <h1 className="my-5"> Crear Nueva Cita</h1>
+            <h1 className="my-5"> {titulo}</h1>
             <div className="container mt-5 py-5">
                 <div className="row">
                     <div className="col-12 mb-5 d-flex justify-content-center">
@@ -54,6 +105,8 @@ function CrearCita(props) {
                                     name="nombre" 
                                     placeholder="Nombre Mascota" 
                                     onChange={actualizarState}
+                                    value={cita.nombre ? cita.nombre : ""}    
+    
                                 />
                             </div>
 
@@ -66,6 +119,8 @@ function CrearCita(props) {
                                     name="propietario" 
                                     placeholder="Nombre Propietario" 
                                     onChange={actualizarState}
+                                    value={cita.propietario ? cita.propietario : ""}        
+                                    
                                 />
                             </div>
 
@@ -78,6 +133,8 @@ function CrearCita(props) {
                                     name="telefono" 
                                     placeholder="Teléfono" 
                                     onChange={actualizarState}
+                                    value={cita.telefono ? cita.telefono : ""}    
+
                                 />
                             </div>
 
@@ -89,6 +146,8 @@ function CrearCita(props) {
                                     id="fecha" 
                                     name="fecha" 
                                     onChange={actualizarState}
+                                    value={cita.fecha ? cita.fecha : ""}    
+
                                 />
                             </div>
 
@@ -100,6 +159,8 @@ function CrearCita(props) {
                                     id="hora" 
                                     name="hora"  
                                     onChange={actualizarState}
+                                    value={cita.hora ? cita.hora : ""}    
+
                                 />
                             </div>
 
@@ -110,12 +171,15 @@ function CrearCita(props) {
                                     name="sintomas" 
                                     rows="6" 
                                     onChange={actualizarState}
+                                    value={cita.sintomas ? cita.sintomas : ""}    
+
                                 ></textarea>
                             </div>
 
 
-                            <input type="submit" className="btn btn-primary mt-3 w-100 p-3 text-uppercase font-weight-bold" value="Crear Cita"  />
+                            <input type="submit" className="btn btn-primary mt-3 w-100 p-3 text-uppercase font-weight-bold" value={titulo}  />
                         </form>
+                        
                     </div>
 
                 </div>
@@ -126,4 +190,4 @@ function CrearCita(props) {
     );
 }
 
-export default CrearCita;
+export default withRouter(CrearCita);
