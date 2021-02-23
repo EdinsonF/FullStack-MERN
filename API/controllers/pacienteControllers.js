@@ -61,9 +61,11 @@ exports.actualizarPaciente = async (req, res, next) => {
 
 //eliminar paciente
 exports.eliminarPaciente = async (req,res, next) => {
-
+    
     try{
-        await Paciente.findOneAndDelete(req.params.id);
+        //console.log("modelo eliminar");
+        //console.log(req.params.id);
+    await Paciente.findByIdAndDelete(req.params.id);
         res.json({mensaje: "Paciente Elimindo"});
     }catch(error){
         console.log(error);

@@ -1,19 +1,39 @@
 import React, { Fragment } from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import clienteAxios from '../config/axios'
+import Swal from 'sweetalert2';
 
 const Paciente = ( props) => {
     const {citas} = props;
     
     const eliminarCita = (id) =>{
-        console.log(id);
+        //console.log(id);
 
-        clienteAxios.delete(`/pacientes/${id}`)
-        .then(respuesta => {
-                props.guardarConsultar(true);
-                props.history.push('/'); 
-        })
-        .catch(error => console.log(error))
+
+        Swal.fire({
+            title: 'Quieres eliminar?',
+            text: "Los cambios no se pueden revertir!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Eliminar!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+
+                clienteAxios.delete(`/pacientes/${id}`)
+                .then(respuesta => {
+                    props.guardarConsultar(true);
+                    props.history.push('/'); 
+                })
+                .catch(error => console.log(error))
+              Swal.fire(
+                'Eliminado!',
+                'El registro fue eliminado correctamente',
+                'success'
+              )
+            }
+          })
     }
 
     if(citas.size === 0) return null;

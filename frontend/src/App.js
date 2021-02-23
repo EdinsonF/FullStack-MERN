@@ -22,7 +22,7 @@ function App() {
             clienteAxios.get('/pacientes')
               .then(respuesta => {
                 //colocar en el State
-                //console.log(respuesta.data);
+                console.log(respuesta.data);
                 guardarCitas(respuesta.data);
                 guardarConsultar(false);
               })
