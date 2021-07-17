@@ -4,7 +4,8 @@
   "description": "Backend con Express y MongoDB",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./index.js"
+    "dev": "nodemon ./index.js",
+    "start": "node ./index.js"
   },
   "author": "Edinson Figueroa",
   "license": "ISC",

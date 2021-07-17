@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import clienteAxios from '../config/axios';
+import Swal from 'sweetalert2';
 
 
 
@@ -18,6 +19,8 @@ function CrearCita(props) {
         sintomas: ""
     })
 
+    const {nombre, propietario, fecha, hora, telefono, sintomas} = cita;
+
     const actualizarState = e => {
         
         guardarCita({
@@ -28,6 +31,11 @@ function CrearCita(props) {
     const enviarCita = (e) =>{
         e.preventDefault();
 
+        if(nombre === '' || propietario === '' || fecha === '' || hora === '' || telefono === '' || sintomas === ''){
+            console.log("campos vacips");
+            Swal.fire('Campos vacios')
+            return;
+        }
         if(titulo === 'Editar Cita'){
             console.log("Editando");
             clienteAxios.put(`/pacientes/${cita._id}`, cita)
@@ -78,9 +86,6 @@ if(citaUpdate){
             sintomas: citaUpdate.sintomas
 
         })
-        }else{
-            //console.log("creando");
-
         }
       }, [ titulo]);
 

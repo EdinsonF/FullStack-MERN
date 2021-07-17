@@ -36,7 +36,7 @@ const Paciente = ( props) => {
           })
     }
 
-    if(citas.size === 0) return null;
+    
     
 
     return (
@@ -47,8 +47,10 @@ const Paciente = ( props) => {
                     <div className="col-12 mb-5 d-flex justify-content-center">
                         <Link to={'/create'} className="btn btn-success text-uppercase py-2 px-5 font-weight-bold"> Crear Cita</Link>
                     </div>
+
                     <div className="col-md-8 mx-auto">
                         <div className="list-group">
+                            {citas.length === 0 && <h1 className="my-5"> No hay Registros...</h1> }
                             {citas.map(cita => (
                                 <div key={cita._id}>
                                 <Link to={'/cita/'+cita._id}  className="p-5 list-group-item list-group-item-action flex-column align-item-start">

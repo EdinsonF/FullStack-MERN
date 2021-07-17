@@ -15,8 +15,10 @@ const bodyParser = require('body-parser');
 //crear el servidor
 const app = express();
 
+const port = process.env.PORT || 4000;
+console.log(port);
 //habilitar cors con permiso solo pa nuestro dominio
-const listaBlanca = ['http://localhost:3000'];
+const listaBlanca = [`https://confident-clarke-adabc8.netlify.app/`];
 const corsOptions = {
     origin: (origin, callback) => {
         //console.log(origin);
