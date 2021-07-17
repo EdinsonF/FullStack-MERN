@@ -42,6 +42,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/', routes());
 
 //puerto y arranque
-app.listen(4000, () =>{
+app.listen(port, () =>{
     console.log("Servidor Iniciado");
 });
