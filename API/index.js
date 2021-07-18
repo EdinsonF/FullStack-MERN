@@ -15,10 +15,9 @@ const bodyParser = require('body-parser');
 //crear el servidor
 const app = express();
 
-const port = process.env.PORT || 4000;
-console.log(port);
+const port = process.env.PORT || 3000
 //habilitar cors con permiso solo pa nuestro dominio
-const listaBlanca = [`https://confident-clarke-adabc8.netlify.app/`];
+/* const listaBlanca = ['http://localhost:3000'];
 const corsOptions = {
     origin: (origin, callback) => {
         //console.log(origin);
@@ -29,11 +28,13 @@ const corsOptions = {
             callback(new Error('No permitido por Cors'));
         }
     }
-}
+} */
 
-app.use(cors(corsOptions));
+app.use(cors());
 //finaliza el cors
-
+app.get('/prueba', (req, res) => {
+    res.send("Esta funcionando");
+})
 //habilitar el body-parser // middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -43,5 +44,5 @@ app.use('/', routes());
 
 //puerto y arranque
 app.listen(port, () =>{
-    console.log("Servidor Iniciado");
+    console.log("Servidor Iniciado en el puerto", port);
 });
